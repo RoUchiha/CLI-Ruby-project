@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-08-20T21:02:29.198Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36" etag="ju1wpcqRjTbTXvtFao7a" version="14.9.8" type="github">
+<mxfile host="app.diagrams.net" modified="2021-08-20T21:03:13.451Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36" etag="pAtX1guwZQBlkqbM04a4" version="14.9.8" type="github">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
     <mxGraphModel dx="2249" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -93,7 +93,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="kPMzsbJADHHdvd4n1n2J-30" value="takes info from Scraper class and gives rain chances" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="kPMzsbJADHHdvd4n1n2J-30" value="takes info from Scraper class and saves rain chances" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry x="460" y="380" width="166" height="110" as="geometry" />
         </mxCell>
         <mxCell id="kPMzsbJADHHdvd4n1n2J-31" value="scrapes the url from the Search class for info on rain chances" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
