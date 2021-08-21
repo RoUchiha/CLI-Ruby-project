@@ -14,6 +14,7 @@ GEM
     public_suffix (4.0.6)
     racc (1.5.2)
     require_all (3.0.0)
+    require_relative (1.0.3)
 
 PLATFORMS
   x86_64-linux
@@ -24,6 +25,7 @@ DEPENDENCIES
   open-uri
   pry
   require_all
+  require_relative
 
 BUNDLED WITH
    2.2.20
