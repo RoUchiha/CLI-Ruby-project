@@ -8,9 +8,9 @@ class Scraper
     attr_accessor :location, :scrape_url
 
     def initialize(location)
-        
+        scrape_url = Search.new(location)
 
-        scrape_rain(Search.new(location).zip_url)
+        scrape_rain(scrape_url.zip_url)
     end
 
     def scrape_rain(link)
