@@ -2,4 +2,6 @@
 
 require_relative '../environment/environment'
 
-Search.new(75007)
+
+
+puts Scraper.new(75007).scrape_url
