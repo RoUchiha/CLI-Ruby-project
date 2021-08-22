@@ -12,16 +12,14 @@ class Search
 
     def initialize(location)
         if location < 00501 || location > 99950
-            raise ArgumentError
+            raise ArgumentError 
         else
             searcher(location)
         end
     end
 
     def searcher(zip)
-        uri = Addressable::URI.parse('https://www.google.com/search?q=+rain+chances')
-        p = uri.query_values
-        uri.query_values = p.merge('loc' => zip)
+        uri = Addressable::URI.parse('https://weather.com/weather/today/l/' + zip.to_s)        
         @zip_url = uri.to_s
     end
 end
@@ -31,8 +29,6 @@ class Scraper
     attr_accessor :location, :scrape_url
 
     def initialize(location)
-     
-
         scrape_rain(location)
     end
 
@@ -41,11 +37,8 @@ class Scraper
         html = URI.open(link)
         weather = Nokogiri::HTML(html)
 
-        @scrape_url = weather.css('.wtsRwe span.wob_pp').text
+        scrape = weather.css('.CurrentConditions--precipValue--3nxCj').text.strip
+        @scrape_url = scrape
         return @scrape_url
     end
-
-
 end
-
-Scraper.new(75007)

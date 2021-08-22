@@ -1,7 +1,83 @@
 #!/usr/bin/env ruby
 
-require_relative '../environment/environment'
+
+require 'open-uri'
+require 'nokogiri'
+require 'addressable/uri'
+require 'json'
 
 
 
-puts Scraper.new(75007).scrape_url
+
+class Search
+
+    attr_accessor :location, :zip_url
+
+    def initialize(location)
+        if location < 00501 || location > 99950
+            raise ArgumentError 
+        else
+            searcher(location)
+        end
+    end
+
+    def searcher(zip)
+        uri = Addressable::URI.parse('https://weather.com/weather/hourbyhour/l/' + zip.to_s)        
+        @zip_url = uri.to_s
+    end
+end
+
+class Scraper
+
+    attr_accessor :location, :scrape_url
+
+    def initialize(location)
+        scrape_rain(location)
+    end
+
+    def scrape_rain(zip)
+        link = Search.new(zip).zip_url
+        html = URI.open(link)
+        weather = Nokogiri::HTML(html)
+
+        scrape = weather.css('.Icon--icon--3wCKh Icon--actionTheme--sZu_q DetailsSummary--precipIcon--3mKHx PercentageValue').text
+        @scrape_url = scrape
+        return @scrape_url
+    end
+end
+
+class Rain 
+
+    attr_accessor :location
+
+    def initialize(location)
+        chances = Scraper.new(location).scrape_url
+        puts "This location has a #{chances} of rain."
+    end
+end
+
+
+
+
+def start
+    puts "Hello. What zip code would you like today's rain chances for?"
+    user_zip = gets.strip
+    Rain.new(user_zip)
+    new_location
+end
+
+def new_location
+    puts "Would you like to check another zip code? Y/N"
+    yes_no = gets.strip
+    if yes_no == "Y" || yes_no == "y"
+        start 
+    elsif yes_no == "N" || yes_no == "n" || yes_no == "exit" || yes_no == "EXIT"
+        exit
+    else 
+        new_location
+    end
+end
+
+
+
+start
