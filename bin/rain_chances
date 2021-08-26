@@ -6,35 +6,42 @@ require 'nokogiri'
 require 'addressable/uri'
 require 'json'
 
-
-
-
 class Search
 
     attr_accessor :location, :zip_url
 
     def initialize(location)
-        @location = '%05d' % location.to_s
-        if @location.to_i < 00501 || @location.to_i > 99950
+        if location < 501 || location > 99950
             raise ArgumentError 
         else
-            searcher(@location)
+            searcher(location)
         end
     end
 
     def searcher(zip)
-        uri = Addressable::URI.parse('https://weather.com/weather/today/l/' + zip.to_s)        
+        fixed_zip = zip_convert(zip)
+        uri = Addressable::URI.parse('https://weather.com/weather/today/l/' + fixed_zip)        
         @zip_url = uri.to_s
     end
+
+    def zip_convert(code)
+        zcode = code.to_s
+        
+        while zcode.length < 5 do
+            zcode = "0" + zcode
+        end
+        return zcode
+    end
+
 end
+
 
 class Scraper
 
     attr_accessor :location, :scrape_url
 
     def initialize(location)
-        @location = '%05d' % location.to_s
-        scrape_rain(@location)
+        scrape_rain(location)
     end
 
     def scrape_rain(zip)
@@ -57,8 +64,7 @@ class Rain
     attr_accessor :location
 
     def initialize(location)
-        @location = '%05d' % location.to_s
-        chances = Scraper.new(@location).scrape_url
+        chances = Scraper.new(location).scrape_url
         puts "This location's rain forecast: #{chances}."
     end
 end
@@ -68,14 +74,15 @@ end
 
 def start
     puts "Hello. What zip code would you like today's rain chances for?"
-    user_zip = gets.strip
+    user_zip = gets.chomp.to_i
     Rain.new(user_zip)
+
     new_location
 end
 
 def new_location
     puts "Would you like to check another zip code? Y/N"
-    yes_no = gets.strip
+    yes_no = gets.chomp
     if yes_no == "Y" || yes_no == "y"
         start 
     elsif yes_no == "N" || yes_no == "n" || yes_no == "exit" || yes_no == "EXIT"
