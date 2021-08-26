@@ -6,24 +6,6 @@ require 'json'
 
 require_relative './search.rb'
 
-class Search
-
-    attr_accessor :location, :zip_url
-
-    def initialize(location)
-        if location < 00501 || location > 99950
-            raise ArgumentError 
-        else
-            searcher(location)
-        end
-    end
-
-    def searcher(zip)
-        uri = Addressable::URI.parse('https://weather.com/weather/today/l/' + zip.to_s)        
-        @zip_url = uri.to_s
-    end
-end
-
 class Scraper
 
     attr_accessor :location, :scrape_url
@@ -36,9 +18,13 @@ class Scraper
         link = Search.new(zip).zip_url
         html = URI.open(link)
         weather = Nokogiri::HTML(html)
-
-        scrape = weather.css('.CurrentConditions--precipValue--3nxCj').text.strip
-        @scrape_url = scrape
+        if weather.css('.CurrentConditions--precipValue--3nxCj').text != ""
+            @scrape_url = weather.css('.CurrentConditions--precipValue--3nxCj').text
+        elsif weather.css('.CurrentConditions--precipValue--3nxCj').text == "" && !weather.css('.CurrentConditions--phraseValue--2Z18W').text.include?("Rain")
+            @scrape_url = "0% chance of rain"
+        else
+            @scrape_url = "expect #{weather.css('.CurrentConditions--phraseValue--2Z18W').text}"
+        end
         return @scrape_url
     end
 end
