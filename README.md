@@ -1,7 +1,7 @@
 # CLI-Ruby-project
 
 
-   Retrieves weather data for a given zip code's current rain forecast from Weather.com, then asks the user if they want to look up another zip code or exit the app.
+   Retrieves a 5 day forecast for a given zip code, including daily high temperature, daily low temperature, and daily rain chances.
 
 ## Install Instructions
 
@@ -22,13 +22,13 @@
 ## Execution
 
     ```
-    ruby bin/rain_chances
+    ruby bin/forecast
     ```
 
     OR
 
     ```
-    ruby ./bin/rain_chances
+    ruby ./bin/forecast
     ```
 
 

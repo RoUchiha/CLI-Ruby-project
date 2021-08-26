@@ -1,0 +1,176 @@
+#!/usr/bin/env ruby
+
+require './environment/environment.rb'
+
+require 'open-uri'
+require 'nokogiri'
+require 'addressable/uri'
+require 'json'
+
+
+class Search
+
+    attr_accessor :location, :zip_url
+
+    def initialize(location)
+        if location < 501 || location > 99950
+            raise ArgumentError 
+        else
+            searcher(location)
+        end
+    end
+
+    def searcher(zip)
+        fixed_zip = zip_convert(zip)
+        uri = Addressable::URI.parse('https://weather.com/weather/today/l/' + fixed_zip)        
+        @zip_url = uri.to_s
+    end
+
+    def zip_convert(code)
+        zcode = code.to_s
+        while zcode.length < 5 do
+            zcode = "0" + zcode
+        end
+        return zcode
+    end
+end
+
+
+
+class Scraper
+
+    attr_accessor :location, :outlook
+
+    def initialize(location)
+        scrape_rain(location)
+    end
+
+    def scrape_rain(zip)
+        @outlook = []
+        link = Search.new(zip).zip_url
+        html = URI.open(link)
+        weather = Nokogiri::HTML(html)
+        weather.css('.DailyWeatherCard--TableWrapper--3mjsg').css('.WeatherTable--columns--OWgEl li.Column--column--1p659').each do |w|
+            i = 0
+            if w.css('.Column--temp--5hqI_')[i].text == "--"
+                @outlook << {
+                    :high => weather.css('.CurrentConditions--primary--2SVPh .CurrentConditions--tempValue--3a50n').text,
+                    :low => w.css('.Column--tempLo--1GNnT')[i].text,
+                    :rain => w.css('.Column--precip--2ck8J .Accessibility--visuallyHidden--2uGW3')[i].text
+                    }
+            else
+                @outlook << {
+                    :high => w.css('.Column--temp--5hqI_')[i].text,
+                    :low => w.css('.Column--tempLo--1GNnT')[i].text,
+                    :rain => w.css('.Column--precip--2ck8J .Accessibility--visuallyHidden--2uGW3')[i].text
+                    }
+            end
+            i += 1
+        end       
+
+
+        
+    end 
+end
+
+class Weather
+
+    attr_accessor :location, :day1, :day2, :day3, :day4, :day5
+
+    def initialize(location)
+        chances = Scraper.new(location).outlook
+        @day1 = chances[0]
+        @day2 = chances[1]
+        @day3 = chances[2]
+        @day4 = chances[3]
+        @day5 = chances[4]
+    end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def start
+    puts "What zip code would you like the 5 day weather forecast for?"
+    user_zip = gets.chomp.to_i
+    $forecast = Weather.new(user_zip)
+
+    pick_day($forecast)
+
+    
+end
+
+def new_location
+    puts "Would you like to check another zip code? Y/N"
+    yes_no = gets.chomp
+    if yes_no == "Y" || yes_no == "y"
+        start 
+    elsif yes_no == "N" || yes_no == "n" || yes_no == "exit" || yes_no == "EXIT"
+        exit
+    else 
+        new_location
+    end
+end
+
+def pick_day(forecast)
+    puts "Enter the number for the day that you want the weather for:"
+   
+    puts "1. #{(Date.today).strftime('%m/%d/%Y')}"
+    puts "2. #{(Date.today + 1).strftime('%m/%d/%Y')}"
+    puts "3. #{(Date.today + 2).strftime('%m/%d/%Y')}"
+    puts "4. #{(Date.today + 3).strftime('%m/%d/%Y')}"
+    puts "5. #{(Date.today + 4).strftime('%m/%d/%Y')}"
+
+    weather_day = gets.chomp
+
+    if weather_day == "1"
+        puts "High: #{forecast.day1[:high]}"
+        puts "Low: #{forecast.day1[:low]}"
+        puts "Rain: #{forecast.day1[:rain]}"
+    elsif weather_day == "2"
+        puts "High: #{forecast.day2[:high]}"
+        puts "Low: #{forecast.day2[:low]}"
+        puts "Rain: #{forecast.day2[:rain]}"
+    elsif weather_day == "3"
+        puts "High: #{forecast.day3[:high]}"
+        puts "Low: #{forecast.day3[:low]}"
+        puts "Rain: #{forecast.day3[:rain]}"
+    elsif weather_day == "4"
+        puts "High: #{forecast.day4[:high]}"
+        puts "Low: #{forecast.day4[:low]}"
+        puts "Rain: #{forecast.day4[:rain]}"
+    elsif weather_day == "5"
+        puts "High: #{forecast.day5[:high]}"
+        puts "Low: #{forecast.day5[:low]}"
+        puts "Rain: #{forecast.day5[:rain]}"
+    end
+
+    pick_again
+end
+
+def pick_again
+    puts "Would you like to check another day's weather? Y/N"
+    recheck = gets.chomp
+    if recheck == "Y" || recheck == "y"
+        pick_day($forecast)
+    elsif recheck == "N" || recheck == "n"
+        new_location
+    end
+end
+
+
+start
+
+
+
