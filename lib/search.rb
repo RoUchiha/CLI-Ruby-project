@@ -27,5 +27,4 @@ class Search
         end
         return zcode
     end
-
 end
