@@ -38,7 +38,8 @@
     * [Nokogiri](https://rubygems.org/gems/nokogiri) - HTML and XML parsing software library.
     * [Open URI](https://rubygems.org/gems/open-uri) - Net::HTTP wrapper.
     * [JSON](https://rubygems.org/gems/json/versions/2.5.1) - parsing and generating JSON in Ruby.
-    *[Addressable URI](https://rubygems.org/gems/addressable) - returns a URI based on the parsed string.
+    * [Addressable URI](https://rubygems.org/gems/addressable) - returns a URI based on the parsed string.
+    * [Date](https://rubygems.org/gems/date/versions/3.1.1) - allows output of dates.
 
 ## Creator
 
