@@ -8,107 +8,13 @@ require 'addressable/uri'
 require 'json'
 
 
-class Search
-
-    attr_accessor :location, :zip_url
-
-    def initialize(location)
-        if location < 501 || location > 99950
-            raise ArgumentError 
-        else
-            searcher(location)
-        end
-    end
-
-    def searcher(zip)
-        fixed_zip = zip_convert(zip)
-        uri = Addressable::URI.parse('https://weather.com/weather/today/l/' + fixed_zip)        
-        @zip_url = uri.to_s
-    end
-
-    def zip_convert(code)
-        zcode = code.to_s
-        while zcode.length < 5 do
-            zcode = "0" + zcode
-        end
-        return zcode
-    end
-end
-
-
-
-class Scraper
-
-    attr_accessor :location, :outlook
-
-    def initialize(location)
-        scrape_rain(location)
-    end
-
-    def scrape_rain(zip)
-        @outlook = []
-        link = Search.new(zip).zip_url
-        html = URI.open(link)
-        weather = Nokogiri::HTML(html)
-        weather.css('.DailyWeatherCard--TableWrapper--3mjsg').css('.WeatherTable--columns--OWgEl li.Column--column--1p659').each do |w|
-            i = 0
-            if w.css('.Column--temp--5hqI_')[i].text == "--"
-                @outlook << {
-                    :high => weather.css('.CurrentConditions--primary--2SVPh .CurrentConditions--tempValue--3a50n').text,
-                    :low => w.css('.Column--tempLo--1GNnT')[i].text,
-                    :rain => w.css('.Column--precip--2ck8J .Accessibility--visuallyHidden--2uGW3')[i].text
-                    }
-            else
-                @outlook << {
-                    :high => w.css('.Column--temp--5hqI_')[i].text,
-                    :low => w.css('.Column--tempLo--1GNnT')[i].text,
-                    :rain => w.css('.Column--precip--2ck8J .Accessibility--visuallyHidden--2uGW3')[i].text
-                    }
-            end
-            i += 1
-        end       
-
-
-        
-    end 
-end
-
-class Weather
-
-    attr_accessor :location, :day1, :day2, :day3, :day4, :day5
-
-    def initialize(location)
-        chances = Scraper.new(location).outlook
-        @day1 = chances[0]
-        @day2 = chances[1]
-        @day3 = chances[2]
-        @day4 = chances[3]
-        @day5 = chances[4]
-    end
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def start
     puts "What zip code would you like the 5 day weather forecast for?"
     user_zip = gets.chomp.to_i
     $forecast = Weather.new(user_zip)
 
-    pick_day($forecast)
-
-    
+    pick_day($forecast) 
 end
 
 def new_location

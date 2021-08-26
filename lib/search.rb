@@ -16,7 +16,7 @@ class Search
 
     def searcher(zip)
         fixed_zip = zip_convert(zip)
-        uri = Addressable::URI.parse('https://weather.com/weather/tenday/l/' + fixed_zip)        
+        uri = Addressable::URI.parse('https://weather.com/weather/today/l/' + fixed_zip)        
         @zip_url = uri.to_s
     end
 
