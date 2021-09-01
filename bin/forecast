@@ -2,81 +2,11 @@
 
 require './environment/environment.rb'
 
-require 'open-uri'
-require 'nokogiri'
-require 'addressable/uri'
-require 'json'
 
+puts "What zip code would you like the 5 day weather forecast for?"
+user_zip = gets.chomp.to_i
 
-
-def start
-    puts "What zip code would you like the 5 day weather forecast for?"
-    user_zip = gets.chomp.to_i
-    $forecast = Weather.new(user_zip)
-
-    pick_day($forecast) 
-end
-
-def new_location
-    puts "Would you like to check another zip code? Y/N"
-    yes_no = gets.chomp
-    if yes_no == "Y" || yes_no == "y"
-        start 
-    elsif yes_no == "N" || yes_no == "n" || yes_no == "exit" || yes_no == "EXIT"
-        exit
-    else 
-        new_location
-    end
-end
-
-def pick_day(forecast)
-    puts "Enter the number for the day that you want the weather for:"
-   
-    puts "1. #{(Date.today).strftime('%m/%d/%Y')}"
-    puts "2. #{(Date.today + 1).strftime('%m/%d/%Y')}"
-    puts "3. #{(Date.today + 2).strftime('%m/%d/%Y')}"
-    puts "4. #{(Date.today + 3).strftime('%m/%d/%Y')}"
-    puts "5. #{(Date.today + 4).strftime('%m/%d/%Y')}"
-
-    weather_day = gets.chomp
-
-    if weather_day == "1"
-        puts "High: #{forecast.day1[:high]}"
-        puts "Low: #{forecast.day1[:low]}"
-        puts "Rain: #{forecast.day1[:rain]}"
-    elsif weather_day == "2"
-        puts "High: #{forecast.day2[:high]}"
-        puts "Low: #{forecast.day2[:low]}"
-        puts "Rain: #{forecast.day2[:rain]}"
-    elsif weather_day == "3"
-        puts "High: #{forecast.day3[:high]}"
-        puts "Low: #{forecast.day3[:low]}"
-        puts "Rain: #{forecast.day3[:rain]}"
-    elsif weather_day == "4"
-        puts "High: #{forecast.day4[:high]}"
-        puts "Low: #{forecast.day4[:low]}"
-        puts "Rain: #{forecast.day4[:rain]}"
-    elsif weather_day == "5"
-        puts "High: #{forecast.day5[:high]}"
-        puts "Low: #{forecast.day5[:low]}"
-        puts "Rain: #{forecast.day5[:rain]}"
-    end
-
-    pick_again
-end
-
-def pick_again
-    puts "Would you like to check another day's weather? Y/N"
-    recheck = gets.chomp
-    if recheck == "Y" || recheck == "y"
-        pick_day($forecast)
-    elsif recheck == "N" || recheck == "n"
-        new_location
-    end
-end
-
-
-start
+CLI.new(user_zip)
 
 
 

@@ -19,5 +19,6 @@ class Weather
         @day4 = chances[3]
         @day5 = chances[4]
     end
+
 end
 

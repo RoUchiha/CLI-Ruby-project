@@ -28,3 +28,4 @@ class Search
         return zcode
     end
 end
+
